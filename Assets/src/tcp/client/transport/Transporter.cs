@@ -122,7 +122,7 @@ namespace GoClient
                 {
                     state.buffer = (byte[])fieldInfo.GetValue(r);
                 }
-                
+
                 int length = this.outStream.EndRead(r);
                 if (length > 0)
                 {
@@ -196,6 +196,7 @@ namespace GoClient
 
                 //Invoke the protocol api to handle the message
                 this.messageProcesser.Invoke(buffer);
+                
                 this.bufferOffset = 0;
                 this.pkgLength = 0;
 
