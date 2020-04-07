@@ -104,8 +104,9 @@ namespace GoClient
             Debug.Log("HandleOnEventTrigger" + JsonMapper.ToJson(data));
             if (eventName == EVENT_DISCONNECT)
             {
-                //TODO
-                Debug.LogError("TJODODODODODO");
+                //TODO               
+                this.onReceivePushCallbackDic[eventName]?.Invoke("11111111111111111111111");
+                //Debug.LogError("TJODODODODODO");
                 //this.onReceivePushCallbackDic[eventName].Invoke(data["reason"].ToJson());
                 return;
             }
@@ -133,15 +134,15 @@ namespace GoClient
 
         public void Disconnect(string reason)
         {
-            // JsonData reasonJD = new JsonData();
-            // reasonJD["reason"] = reason;
+            //JsonData reasonJD = new JsonData();
+            //reasonJD["reason"] = reason;
             this.CloseAll(new byte[]{});
         }
 
         public void Disconnect(JsonData reasonJD)
         {
 
-            this.CloseAll(new byte[]{});
+            this.CloseAll(new byte[]{1,2,3,4,5});
         }
 
         private void CloseAll(byte[] disconnectReason)
@@ -211,18 +212,26 @@ namespace GoClient
         {
             if (msg.type == MessageType.MSG_RESPONSE)
             {
+                Debug.LogError("TODO1");
                 eventManager.InvokeCallBack(msg.id, msg.data);
             }
             else if (msg.type == MessageType.MSG_PUSH)
             {
+                Debug.LogError("TODO2");
                 eventManager.InvokeOnEvent(msg.route, msg.data);
+            }
+            else if(msg.type==MessageType.MSG_REQUEST)
+            {
+                //Debug.LogError("TODO3");
+                eventManager.InvokeCallBack(msg.id, msg.data);
             }
         }
 
         private void ProcessServerPackage(byte[] bytes)
         {
             Package pkg = this.msgPipline.PackageDecode(bytes);
-            Debug.Log("rec pkg:"+pkg.type.ToString()+pkg.body.ToString());
+            Debug.Log("rec pkg:"+pkg.type.ToString());
+
             //Ignore all the message except handshading at handshake stage
             if (pkg.type == PackageType.PKG_HANDSHAKE && this.handshaking)
             {

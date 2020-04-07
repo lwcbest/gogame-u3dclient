@@ -25,6 +25,19 @@
 
         public void sendHeartBeat(object source, ElapsedEventArgs e)
         {
+            //-----------------------for Test-----------------------
+            //var rand = new Random();
+            //int x = rand.Next(0, 100);
+            //UnityEngine.Debug.Log(x);
+            //if(x>= 60)
+            //{
+            //    UnityEngine.Debug.Log("++++++++++++++++++++++++++++++++++++++++++");
+            //    this.leafClient.Disconnect("random to stop");
+            //    this.stop();
+            //    return;
+            //}
+            //-----------------------for Test-----------------------
+
             //check timeout
             if (timeout > interval * 2)
             {

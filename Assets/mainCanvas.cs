@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Google.Protobuf;
+using UnityEditor;
 
 public class mainCanvas : MonoBehaviour
 {
@@ -26,9 +27,9 @@ public class mainCanvas : MonoBehaviour
 
     private InputField input_username;
 
-
-
     private bool connected = false;
+
+    #region Unity Event
 
     void Start()
     {
@@ -36,7 +37,6 @@ public class mainCanvas : MonoBehaviour
         SimonProto.ReqGateGetConnector getConnector = new SimonProto.ReqGateGetConnector();
         getConnector.Region = "abc";
         byte[] databytes = getConnector.ToByteArray();
-        Debug.Log(databytes.ToString());
         IMessage imPerson = new SimonProto.ReqGateGetConnector();
         SimonProto.ReqGateGetConnector get2 = (SimonProto.ReqGateGetConnector)imPerson.Descriptor.Parser.ParseFrom(databytes);
         Debug.Log(get2.Region);
@@ -82,6 +82,14 @@ public class mainCanvas : MonoBehaviour
         btn_doChat.onClick.AddListener(onDoChatClick);
     }
 
+    private void OnDestroy()
+    {
+        pc?.Disconnect("quit game");
+    }
+
+    #endregion
+
+    #region Button Click
     private void onDoChatClick()
     {
         string interfaceName = "ReqGateGetConnector";
@@ -90,7 +98,8 @@ public class mainCanvas : MonoBehaviour
         byte[] databytes = getConnector.ToByteArray();
         pc.Req(interfaceName, databytes, response =>
         {
-            Debug.Log(response);
+            SimonProto.ResGateGetConnector res = SimonProto.ResGateGetConnector.Parser.ParseFrom((byte[])response);
+            Debug.Log("[Protocol]response:" + res.ToString());
         });
     }
 
@@ -123,6 +132,7 @@ public class mainCanvas : MonoBehaviour
             connected = true;
         }
     }
+    #endregion
 
     private void InitSimpleEventListener()
     {
